@@ -23,7 +23,12 @@ export const fetchConflictIssues = async ({pageParam,queryKey}) => {
 }
 
 export const sendIssue = (issue) => {
-    return axios.post(`${BACKEND_URL}/issue`,issue,{withCredentials : true})
+    return axios.post(`${BACKEND_URL}/issue`,issue,{
+        headers : {
+            'Content-Type' : 'multipart/form-data'
+        },
+        withCredentials : true
+    })
 }
 
 export const userSignUp = (user) => {

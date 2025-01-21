@@ -105,12 +105,23 @@ const IssueForm = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    sendIssue({
-      ...formData,
-      latitude: formData.location.lat,
-      longitude: formData.location.lng,
-      isAnonymous : isAnonymous
-    })
+    const newFormData = new FormData();
+    newFormData.append('title', formData.title);
+    newFormData.append('description', formData.description);
+    newFormData.append('address', formData.address);
+    newFormData.append('latitude', formData.location.lat);
+    newFormData.append('longitude', formData.location.lng);
+    newFormData.append('image', formData.image);
+    newFormData.append('isAnonymous', formData.isAnonymous);
+
+    // sendIssue({
+    //   ...formData,
+    //   latitude: formData.location.lat,
+    //   longitude: formData.location.lng,
+    //   isAnonymous : isAnonymous
+    // })
+
+    sendIssue(newFormData);
     
   };
 
