@@ -85,6 +85,7 @@ const Issue = () => {
       [...page.data.issues]
     ))
   }
+  console.log(markers)
 
  
  
@@ -189,7 +190,7 @@ const Issue = () => {
             <MapWithMarkers
                 
                 markers={
-                  markers.flat().map((issue) => ({
+                  markers?.flat().map((issue) => ({
                     latitude: issue.latitude,
                     longitude: issue.longitude,
                     title: issue.title,
@@ -228,7 +229,7 @@ const Issue = () => {
               <MapWithMarkers
                 
                 markers={
-                  markers.flat().map((issue) => ({
+                  markers?.flat().map((issue) => ({
                     latitude: issue.latitude,
                     longitude: issue.longitude,
                     title: issue.title,

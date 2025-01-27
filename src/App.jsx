@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Route, Routes, useNavigate } from "react-router-dom";
+
+import { Route, Routes} from "react-router-dom";
 import SignupForm from "./pages/UserSignup";
 import OTPVerification from "./pages/VerifyOTP";
 import AuthoritySignup from "./pages/AuthoritySignup";
@@ -12,17 +12,23 @@ import IssueForm from "./components/SendIssue";
 import Dashboard from "./pages/Dashboard";
 import AudioRecorder from "./components/AudioRecorder";
 import AuthorityLoginForm from "./pages/AuthoritySignin";
-import { RecoilRoot } from "recoil";
+
 import Navbar from "./components/Navbar";
 import UserProfile from "./pages/CitizenDashboard";
 import { useFetchUser } from "./api/query";
+import Loader from "./components/Loader";
 
 
 
 
 function App() {
-  const navigate = useNavigate();
-  const {data: user} = useFetchUser()
+
+  const {isLoading} = useFetchUser()
+  if(isLoading) return (
+    <div className="flex justify-center items-center h-screen">
+      <Loader />
+    </div>
+  )
   return (
     <>
     

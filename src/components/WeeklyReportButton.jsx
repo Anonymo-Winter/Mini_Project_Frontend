@@ -43,8 +43,8 @@ const ReportDownloadButton = () => {
         onClick={handleDownload}
         className="flex items-center gap-2"
       >
-        <DownloadCloud className="w-4 h-4" />
-        {loading ? <Loader2 className='animate-spin' /> : 'Download Report'}
+        
+        {loading ? <p className='flex justify-center items-center gap-2'><Loader2 className='animate-spin' /> generating report.. </p> : <p className='flex justify-center items-center gap-2'><DownloadCloud className="w-4 h-4" /> Download Report</p>}
       </Button>
     </div>
   );

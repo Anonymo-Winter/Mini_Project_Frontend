@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { MapPin, ImagePlus, Loader2, MessageSquare, Send } from 'lucide-react';
+import { MapPin, ImagePlus, Loader2, MessageSquare, Send, Upload, Mic, Square } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
@@ -14,6 +14,7 @@ import L from 'leaflet';
 import { useSendIssue } from '@/api/query';
 import { useToast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
+
 
 
 // Fix for default marker icons in react-leaflet
@@ -46,6 +47,113 @@ const ChatMessage = ({ content, isUser }) => (
   </div>
 );
 
+const AudioRecorder = ({ onAudioChange }) => {
+  const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorderRef = useRef(null);
+  const chunksRef = useRef([]);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    return () => {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+        mediaRecorderRef.current.stop();
+        mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 44100
+        } 
+      });
+
+      const options = { mimeType: 'audio/webm;codecs=opus' };
+      const recorder = new MediaRecorder(stream, options);
+      
+      chunksRef.current = [];
+      
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunksRef.current.push(e.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        try {
+          const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm;codecs=opus' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          
+          // Test the audio blob
+          const audio = new Audio(audioUrl);
+          audio.onloadedmetadata = () => {
+            const audioFile = new File([audioBlob], 'recording.webm', { 
+              type: 'audio/webm;codecs=opus',
+              lastModified: Date.now()
+            });
+            onAudioChange(audioFile, audioUrl);
+          };
+
+          audio.onerror = () => {
+            toast({
+              title: "Recording Error",
+              description: "Failed to create playable audio. Please try again.",
+              variant: "destructive"
+            });
+            URL.revokeObjectURL(audioUrl);
+          };
+        } catch (error) {
+          console.error('Error processing audio:', error);
+          toast({
+            title: "Recording Error",
+            description: "Failed to process audio. Please try again.",
+            variant: "destructive"
+          });
+        }
+      };
+
+      mediaRecorderRef.current = recorder;
+      recorder.start(100); // Record in 100ms chunks for better quality
+      setIsRecording(true);
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+      toast({
+        title: "Microphone Error",
+        description: "Please ensure you have granted microphone permissions.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+      setIsRecording(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      <Button
+        type="button"
+        variant={isRecording ? "destructive" : "secondary"}
+        size="icon"
+        onClick={isRecording ? stopRecording : startRecording}
+        className="rounded-full transition-all duration-200"
+      >
+        {isRecording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+      </Button>
+      <span className="text-sm text-muted-foreground">
+        {isRecording ? 'Recording... Click to stop' : 'Click to start recording'}
+      </span>
+    </div>
+  );
+};
 const IssueForm = () => {
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(null);
@@ -55,6 +163,7 @@ const IssueForm = () => {
 
   const queryClient = useQueryClient()
   const userData = queryClient.getQueryData(['user']);
+  console.log(userData)
   
   const {toast} = useToast()
   const [formData, setFormData] = useState({
@@ -63,12 +172,127 @@ const IssueForm = () => {
     address: '',
     location: { lat: userData?.latitude, lng: userData?.longitude },
     image: null,
+    audio : null,
     isAnonymous
   });
 
   const [markerPosition, setMarkerPosition] = useState(formData.location);
 
   const {mutate : sendIssue,isPending,isError} = useSendIssue()
+
+  const [audioPreview, setAudioPreview] = useState(null);
+  const audioRef = useRef(null);
+  
+
+  const handleAudioFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file size (10MB limit)
+      if (file.size > 10 * 1024 * 1024) {
+        toast({
+          title: "File Too Large",
+          description: "Please select an audio file smaller than 10MB",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const url = URL.createObjectURL(file);
+      
+      // Test if the audio file is playable
+      const audio = new Audio(url);
+      audio.onloadedmetadata = () => {
+        setFormData(prev => ({...prev, audio: file}));
+        setAudioPreview(url);
+      };
+
+      audio.onerror = () => {
+        URL.revokeObjectURL(url);
+        toast({
+          title: "Invalid Audio File",
+          description: "Please select a valid audio file",
+          variant: "destructive"
+        });
+      };
+    }
+  };
+
+  const handleAudioRecording = (audioFile, audioUrl) => {
+    setFormData(prev => ({...prev, audio: audioFile}));
+    setAudioPreview(audioUrl);
+  };
+
+  // Cleanup function for audio preview URLs
+  useEffect(() => {
+    return () => {
+      if (audioPreview) {
+        URL.revokeObjectURL(audioPreview);
+      }
+    };
+  }, [audioPreview]);
+
+  const audioUploadSection = (
+    <div className="space-y-2">
+      <Label>Audio Description</Label>
+      <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 transition-all duration-200 hover:border-primary/30">
+        <div className="flex flex-col items-center gap-4">
+          {audioPreview ? (
+            <div className="w-full space-y-2">
+              <audio 
+                ref={audioRef}
+                controls 
+                src={audioPreview} 
+                className="w-full"
+                onError={(e) => {
+                  console.error('Audio playback error:', e);
+                  toast({
+                    title: "Playback Error",
+                    description: "Unable to play the audio file",
+                    variant: "destructive"
+                  });
+                }}
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                className="w-full hover:bg-red-500 hover:text-white transition-colors duration-200"
+                onClick={() => {
+                  if (audioRef.current) {
+                    audioRef.current.pause();
+                  }
+                  URL.revokeObjectURL(audioPreview);
+                  setAudioPreview(null);
+                  setFormData(prev => ({...prev, audio: null}));
+                }}
+              >
+                Remove Audio
+              </Button>
+            </div>
+          ) : (
+            <>
+              <AudioRecorder onAudioChange={handleAudioRecording} />
+              <div className="w-full text-center">
+                <p className="text-sm text-gray-500 mb-2">Or upload an existing audio file</p>
+                <label className="cursor-pointer">
+                  <div className="flex items-center justify-center gap-2 p-2 border rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                    <Upload className="h-4 w-4" />
+                    <span className="text-sm">Choose audio file</span>
+                  </div>
+                  <input
+                    type="file"
+                    accept="audio/*"
+                    onChange={handleAudioFileChange}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+      <p className="text-sm text-gray-500">Supported formats: MP3, WAV, WebM (max 10MB)</p>
+    </div>
+  );
 
 
   useEffect(() => {
@@ -113,7 +337,7 @@ const IssueForm = () => {
     newFormData.append('longitude', formData.location.lng);
     newFormData.append('image', formData.image);
     newFormData.append('isAnonymous', formData.isAnonymous);
-
+    newFormData.append('audio', formData.audio);
     // sendIssue({
     //   ...formData,
     //   latitude: formData.location.lat,
@@ -258,8 +482,8 @@ const IssueForm = () => {
                             <ImagePlus className="h-8 w-8 text-gray-600" />
                           </div>
                           <label className="cursor-pointer text-center">
-                            <span className="text-primary hover:text-primary/80 transition-colors duration-200">
-                              Click to upload
+                            <span className="text-primary font-bold hover:text-primary/80 transition-colors duration-200">
+                              Click here to upload
                             </span>
                             <span className="text-gray-500"> or drag and drop</span>
                             <input
@@ -275,6 +499,10 @@ const IssueForm = () => {
                     </div>
                   </div>
                 </div>
+
+                {audioUploadSection}
+
+
                 <div className="flex items-center justify-between space-x-2">
                   <div className="space-y-0.5">
                     <Label htmlFor="anonymous-toggle">Anonymous Report</Label>
@@ -314,7 +542,7 @@ const IssueForm = () => {
               </form>
               <div className="space-y-2 w-full md:w-1/2" style={{ zIndex: 0 }}> {/* Add lower z-index to map container */}
                 <Label>Location (Click to Set)</Label>
-                <div className="h-[600px] w-full rounded-lg overflow-hidden shadow-md">
+                <div className="h-[800px] w-full rounded-lg overflow-hidden shadow-md">
                   <MapContainer 
                     center={[formData.location.lat, formData.location.lng]} 
                     zoom={10} 

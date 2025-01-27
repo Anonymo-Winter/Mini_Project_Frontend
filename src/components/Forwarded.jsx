@@ -36,6 +36,15 @@ function Forwarded() {
     { id: "welfare", name: "welfare", icon: Leaf },
     { id: "construction", name: "Construction", icon: HardHat },
   ];
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date);
+  };
 
   const {
     data,
@@ -112,7 +121,7 @@ function Forwarded() {
                           </CardTitle>
                         </div>
                         <p className="text-sm text-gray-500 mt-1">
-                          Forwarded on {issue.forwardedDate}
+                          Forwarded on {formatDate(issue.assignedToDate)}
                         </p>
                       </div>
                       <span

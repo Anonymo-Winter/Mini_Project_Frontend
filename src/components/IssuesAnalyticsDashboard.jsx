@@ -83,7 +83,7 @@ const IssueAnalyticsDashboard = () => {
   ];
 
   return (
-    <div className="w-full space-y-4 p-4">
+    <div className="w-full space-y-4 py-4">
       <DashboardTopBar setFromDate={setFromDate} setToDate={setToDate} />
       {isLoading ? (
         <div className="min-h-[80vh] flex items-center justify-center">
