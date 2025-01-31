@@ -391,6 +391,7 @@ export const useUnUpVote = () => {
 }
 
 export const useFetchAnalytics = (fromDate,toDate) => {
+  console.log(fromDate,toDate)
     return useQuery({
         queryKey : ['analytics',fromDate,toDate],
         queryFn : getAnalytics,

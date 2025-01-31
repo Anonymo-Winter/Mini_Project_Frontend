@@ -82,6 +82,7 @@ const DashboardTopBar = ({ setFromDate, setToDate }) => {
     }
 
     try {
+      console.log("Date Range:", dateRange);
       setFromDate(format(dateRange.from, 'yyyy-MM-dd'));
       setToDate(format(dateRange.to, 'yyyy-MM-dd'));
       setIsOpen(false);

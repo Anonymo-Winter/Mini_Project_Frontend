@@ -21,11 +21,12 @@ import AnalyticsDashboard from "./Temp";
 import DepartmentIssuesCard from "./DepartmentWiseBars";
 import Loader from "./Loader";
 import { useFetchAnalytics } from "@/api/query";
+import { endOfMonth, startOfMonth } from "date-fns";
 
 const IssueAnalyticsDashboard = () => {
-  const [fromDate, setFromDate] = useState(null);
+  const [fromDate, setFromDate] = useState(startOfMonth(new Date()));
   const [departmentsData, setDepartmentsData] = useState([]);
-  const [toDate, setToDate] = useState(null);
+  const [toDate, setToDate] = useState(endOfMonth(new Date()));
   let departmentData = [];
   const { data, isLoading, isSuccess, isError } = useFetchAnalytics(
     fromDate,
@@ -33,6 +34,7 @@ const IssueAnalyticsDashboard = () => {
   );
   useEffect(() => {
     if (isSuccess) {
+      console.log(data);
       data.Issues?.forEach((issue) => {
         const department = issue.departmentName;
         const existingDepartment = departmentData.find(
@@ -64,6 +66,7 @@ const IssueAnalyticsDashboard = () => {
         }
       });
       setDepartmentsData(departmentData);
+      //console.log(departmentData);
     }
   }, [isSuccess, data]);
 
@@ -81,6 +84,8 @@ const IssueAnalyticsDashboard = () => {
     "#8884d8",
     "#82ca9d",
   ];
+
+  
 
   return (
     <div className="w-full space-y-4 py-4">
