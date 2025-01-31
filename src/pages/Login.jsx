@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -136,10 +136,16 @@ const LoginForm = () => {
                             </div>
 
                             <div>
-                                <p className="cursor-pointer" onClick={handleForgot}>
+                                <p className="cursor-pointer text-sm" onClick={handleForgot}>
                                     Forgot Password?
                                 </p>
                             </div>
+                            <p className="text-sm text-center text-black">
+                                Don't have an account?{" "}
+                                <Link to="/signup" className="text-red-500 hover:underline">
+                                    Sign up
+                                </Link>
+                            </p>
 
                             <Button type="submit" className="w-full">
                                 {loading ? "Loading..." : "Sign In"}
