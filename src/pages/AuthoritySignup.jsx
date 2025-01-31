@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, Mail, Lock, User, Building, Key } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthoritySignup } from '@/api/query';
+import { useToast } from '@/hooks/use-toast';
 
 const AuthoritySignup = () => {
   const [formData, setFormData] = React.useState({
@@ -71,11 +72,24 @@ const AuthoritySignup = () => {
       { value: 'zonal-officer', label: 'Zonal Officer' }
     ]
   };
+          
+  const {toast} = useToast();                           1                                               
+  const {mutate, isPending, isError, error} = useAuthoritySignup();
+  useEffect(() => {
+    if (isError) {
+      toast({
+        variant: 'destructive',
+        title: error.response?.data?.error,
+        description: 'An error occurred while creating the account.',
+      });
+      
+    }
+        
+  },[isError])
 
   const [errors, setErrors] = React.useState({});
   const [showAlert, setShowAlert] = React.useState(false);
   const navigate = useNavigate();
-  const {mutate, isPending, isError} = useAuthoritySignup();
 
   const validateForm = () => {
     const newErrors = {};

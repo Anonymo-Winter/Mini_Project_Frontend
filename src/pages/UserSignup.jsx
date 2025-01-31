@@ -15,9 +15,9 @@ const SignupForm = () => {
     const queryClient = useQueryClient();
     const [error, setError] = React.useState("");
     const [formData, setFormData] = React.useState({
-        name: "Tarun Sumanth",
-        phone: "9505037969",
-        password: "12312312",
+        name: "",
+        phone: "",
+        password: "",
         latitude: null,
         longitude: null,
     });
