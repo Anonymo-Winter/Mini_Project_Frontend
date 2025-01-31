@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { data, useNavigate } from "react-router-dom";
+import { data, Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,9 +15,9 @@ const SignupForm = () => {
     const queryClient = useQueryClient();
     const [error, setError] = React.useState("");
     const [formData, setFormData] = React.useState({
-        name: "Tarun Sumanth",
-        phone: "9505037969",
-        password: "12312312",
+        name: "",
+        phone: "",
+        password: "",
         latitude: null,
         longitude: null,
     });
@@ -153,6 +153,13 @@ const SignupForm = () => {
                                 <MapPin className="h-4 w-4" />
                                 {formData.latitude ? "Location accessed" : "Accessing location..."}
                             </div>
+
+                            <p className="text-sm text-center text-black">
+                                Already have an account?{" "}
+                                <Link to="/signin" className="text-red-500 hover:underline">
+                                    Sign in
+                                </Link>
+                            </p>
 
                             <Button type="submit" className="w-full">
                                 {isPending ? "Loading..." : "Sign Up"}
