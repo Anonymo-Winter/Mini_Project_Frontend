@@ -57,9 +57,6 @@ function App() {
                 <Loader />
             </div>
         );
-    if (isError) {
-        console.log(error);
-    }
     return (
         <>
             <Routes>
