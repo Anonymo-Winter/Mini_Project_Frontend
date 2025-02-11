@@ -36,7 +36,7 @@ export const fetchConflictIssues = async ({ pageParam, queryKey }) => {
 export const sendIssue = (issue) => {
     return axios.post(`${BACKEND_URL}/issue`, issue, {
         headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "multipart/form-data",      
         },
         withCredentials: true,
     });

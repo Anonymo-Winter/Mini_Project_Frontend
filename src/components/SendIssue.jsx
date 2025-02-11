@@ -163,7 +163,7 @@ const IssueForm = () => {
 
   const queryClient = useQueryClient()
   const userData = queryClient.getQueryData(['user']);
-  console.log(userData)
+  
   
   const {toast} = useToast()
   const [formData, setFormData] = useState({
