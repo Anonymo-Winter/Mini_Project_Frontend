@@ -11,9 +11,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Menu, LogOut, User, FileText } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { userAtom } from "@/store/user";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useFetchUser } from "@/api/query";
 
 // Custom NavLink component that handles active state
@@ -54,9 +52,14 @@ const MobileNavLink = ({ to, children, onClick }) => {
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { data: user } = useFetchUser();
     const location = useLocation();
+    const navigate = useNavigate();
 
+    // Improved user fetch with proper error handling
+    const { data: user, isLoading, isError } = useFetchUser();
+
+    // Function to close the mobile menu
+    const closeMenu = () => setIsMenuOpen(false);
 
     return (
         <nav className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
@@ -121,7 +124,7 @@ const Navbar = () => {
                     {/* Profile Section & Actions */}
                     <div className="flex items-center space-x-3">
                         {/* User Menu */}
-                        {user ? (
+                        {!isLoading && user ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button
@@ -208,8 +211,7 @@ const Navbar = () => {
                         <MobileNavLink to="/send-issue" onClick={closeMenu}>
                             Report
                         </MobileNavLink>
-                        {console.log(user)}
-                        {user ? (
+                        {!isLoading && user ? (
                             <>
                                 <MobileNavLink to="/profile" onClick={closeMenu}>
                                     Profile

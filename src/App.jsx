@@ -16,12 +16,17 @@ import Navbar from "./components/Navbar";
 import UserProfile from "./pages/CitizenDashboard";
 import { useFetchUser } from "./api/query";
 import Loader from "./components/Loader";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const PrivateRoute = ({ children }) => {
-    const { data } = useFetchUser();
-
+    const { data, isLoading } = useFetchUser();
     const location = useLocation();
     const type = data?.type || data?.role;
+
+    if (isLoading) {
+        return <Loader />; // Show a loader while checking auth status
+    }
 
     if (!data) {
         return <Navigate to="/signin" state={{ from: location }} replace />;
@@ -36,12 +41,15 @@ const PrivateRoute = ({ children }) => {
 
 const RedirectAuthenticatedUser = ({ children }) => {
     const location = useLocation();
-    const { data } = useFetchUser();
+    const { data, isLoading } = useFetchUser();
 
     const authPages = ["/signin", "/signup", "/AuthoritySignup", "/authoritySignin"];
 
+    if (isLoading) {
+        return <Loader />; // Show a loader while checking auth status
+    }
+
     if (data && authPages.includes(location.pathname)) {
-        // Redirect to the attempted page or default to auction
         const intendedPath = location.state?.from?.pathname || "/issues";
         return <Navigate to={intendedPath} replace />;
     }
@@ -50,7 +58,14 @@ const RedirectAuthenticatedUser = ({ children }) => {
 };
 
 function App() {
-    const { data: user, error, isError, isLoading } = useFetchUser();
+    const { data: user, error, isLoading } = useFetchUser();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!user && !isLoading) {
+            navigate("/signin");
+        }
+    }, [user, isLoading, navigate]);
 
     if (isLoading)
         return (
@@ -58,10 +73,18 @@ function App() {
                 <Loader />
             </div>
         );
+
     return (
         <>
             <Routes>
-                <Route path="/" element={<Navbar />} />
+                <Route
+                    path="/"
+                    element={
+                        <RedirectAuthenticatedUser>
+                            <Navbar />
+                        </RedirectAuthenticatedUser>
+                    }
+                />
                 <Route
                     path="/signup"
                     element={
