@@ -34,7 +34,7 @@ const IssueAnalyticsDashboard = () => {
   );
   useEffect(() => {
     if (isSuccess) {
-      console.log(data);
+      
       data.Issues?.forEach((issue) => {
         const department = issue.departmentName;
         const existingDepartment = departmentData.find(

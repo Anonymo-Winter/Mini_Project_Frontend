@@ -340,12 +340,7 @@ const IssueForm = () => {
         newFormData.append("image", formData.image);
         newFormData.append("isAnonymous", formData.isAnonymous);
         newFormData.append("audio", formData.audio);
-        // sendIssue({
-        //   ...formData,
-        //   latitude: formData.location.lat,
-        //   longitude: formData.location.lng,
-        //   isAnonymous : isAnonymous
-        // })
+
         sendIssue(newFormData);
     };
 

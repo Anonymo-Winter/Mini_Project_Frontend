@@ -86,26 +86,23 @@ const Issue = () => {
                         <p className="text-slate-600 mb-6">Track and manage community issues in real-time</p>
 
                         {/* Stats Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                            {stats.map((stat) => (
-                                <Card
-                                    key={stat.label}
-                                    className="bg-white/80 border-none shadow-sm hover:shadow-md transition-shadow"
-                                >
-                                    <CardContent className="p-4">
-                                        <div className="flex items-center gap-4">
-                                            <div className={`p-3 bg-${stat.color}-50 rounded-lg`}>
-                                                <stat.icon className={`h-5 w-5 text-${stat.color}-600`} />
-                                            </div>
-                                            <div>
-                                                <p className="text-sm text-slate-500">{stat.label}</p>
-                                                <p className="text-2xl font-bold text-slate-800">{stat.value}</p>
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
+                        {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {stats.map((stat) => (
+              <Card key={stat.label} className="bg-white/80 border-none shadow-sm hover:shadow-md transition-shadow">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-4">
+                    <div className={p-3 bg-${stat.color}-50 rounded-lg}>
+                      <stat.icon className={h-5 w-5 text-${stat.color}-600} />
+                    </div>
+                    <div>
+                      <p className="text-sm text-slate-500">{stat.label}</p>
+                      <p className="text-2xl font-bold text-slate-800">{stat.value}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div> */}
 
                         {/* Search and Filter Section */}
                         <div className="flex flex-col sm:flex-row gap-4">

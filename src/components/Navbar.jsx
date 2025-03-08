@@ -57,7 +57,6 @@ const Navbar = () => {
     const { data: user } = useFetchUser();
     const location = useLocation();
 
-    const closeMenu = () => setIsMenuOpen(false);
 
     return (
         <nav className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
