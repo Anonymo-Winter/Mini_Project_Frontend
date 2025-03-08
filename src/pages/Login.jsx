@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { User, Phone, Lock, MapPin } from "lucide-react";
 import axios from "axios";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { userAtom } from "@/store/user";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -19,8 +19,11 @@ const LoginForm = () => {
         phone: "",
         password: "",
     });
+    const [user, setUser] = useRecoilState(userAtom);
+    console.log(user);
+
     const [loading, setLoading] = useState(false);
-    const setUser = useSetRecoilState(userAtom);
+    //const setUser = useSetRecoilState(userAtom);
     const queryClient = useQueryClient();
     const { toast } = useToast();
 

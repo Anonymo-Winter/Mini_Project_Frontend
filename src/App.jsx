@@ -19,6 +19,7 @@ import Loader from "./components/Loader";
 
 const PrivateRoute = ({ children }) => {
     const { data } = useFetchUser();
+
     const location = useLocation();
     const type = data?.type || data?.role;
 
