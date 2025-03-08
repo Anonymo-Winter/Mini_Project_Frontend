@@ -53,10 +53,9 @@ const MobileNavLink = ({ to, children, onClick }) => {
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
-    const navigate = useNavigate();
 
     // Improved user fetch with proper error handling
-    const { data: user, isLoading, isError } = useFetchUser();
+    const { data: user, isLoading } = useFetchUser();
 
     // Function to close the mobile menu
     const closeMenu = () => setIsMenuOpen(false);
@@ -114,7 +113,7 @@ const Navbar = () => {
                                 </NavigationMenuItem>
                                 {user && (
                                     <NavigationMenuItem>
-                                        <NavLink to="/dashboard">Dashboard</NavLink>
+                                        <NavLink to="/dashboard#notifications">Dashboard</NavLink>
                                     </NavigationMenuItem>
                                 )}
                             </NavigationMenuList>
@@ -153,9 +152,19 @@ const Navbar = () => {
                                     <DropdownMenuItem
                                         className={location.pathname === "/profile" ? "bg-primary/10 text-primary" : ""}
                                     >
-                                        <Link to="/profile" className="flex items-center w-full">
+                                        <Link to="/profile#settings" className="flex items-center w-full">
                                             <User className="mr-2 h-4 w-4" />
                                             <span>Profile</span>
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        className={
+                                            location.pathname === "/my-issues" ? "bg-primary/10 text-primary" : ""
+                                        }
+                                    >
+                                        <Link to="/profile#myList" className="flex items-center w-full">
+                                            <User className="mr-2 h-4 w-4" />
+                                            <span>My issues</span>
                                         </Link>
                                     </DropdownMenuItem>
 

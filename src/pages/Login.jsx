@@ -20,8 +20,6 @@ const LoginForm = () => {
         password: "",
     });
     const [user, setUser] = useRecoilState(userAtom);
-    console.log(user);
-
     const [loading, setLoading] = useState(false);
     //const setUser = useSetRecoilState(userAtom);
     const queryClient = useQueryClient();
