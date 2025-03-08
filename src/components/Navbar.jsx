@@ -19,8 +19,8 @@ const Navbar = () => {
   const user = useRecoilValue(userAtom);
 
   return (
-    <nav className="w-full border-b bg-white">
-      <div className="mx-auto max-w-7xl px-4">
+    <nav className="w-full border-b bg-trannsparent sticky top-0 left-0 z-50 backdrop-blur-md">
+      <div className="mx-auto max-w-[1320px]">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">

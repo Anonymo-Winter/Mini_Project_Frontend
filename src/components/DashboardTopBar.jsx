@@ -103,7 +103,7 @@ const DashboardTopBar = ({ setFromDate, setToDate }) => {
           <h1 className="text-2xl font-semibold text-gray-900">Issues Analytics</h1>
           
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
-            <ReportDownloadButton />
+            <ReportDownloadButton toDate={dateRange.to} fromDate={dateRange.from} />
             <Popover open={isOpen} onOpenChange={setIsOpen}>
               <PopoverTrigger asChild>
                 <Button

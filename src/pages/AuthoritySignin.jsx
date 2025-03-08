@@ -9,6 +9,7 @@ import { User,Mail, Lock, MapPin } from 'lucide-react';
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
 import { userAtom } from '@/store/user';
+import { useToast } from '@/hooks/use-toast';
 
 const AuthorityLoginForm = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const AuthorityLoginForm = () => {
 
   const setUser = useSetRecoilState(userAtom)
 
-  
+  const {toast} = useToast()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,7 +52,11 @@ const AuthorityLoginForm = () => {
 
         navigate('/dashboard')
     }catch(e){
-        console.log(e)
+        toast({
+            title : "Error",
+            description : e.response.data.message,
+            variant : "destructive"
+        })
     }finally{
         setLoading(false)
     }

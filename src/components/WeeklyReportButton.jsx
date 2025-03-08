@@ -3,17 +3,18 @@ import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
 import { DownloadCloud, Loader2 } from "lucide-react";
 
-const ReportDownloadButton = () => {
+const ReportDownloadButton = ({toDate,fromDate}) => {
 
   const [loading,setLoading] = useState(false);
   const handleDownload = async () => {
     try {
     setLoading(true);
-      const response = await fetch('http://localhost:3000/issue/reports/download', {
+      const response = await fetch('http://localhost:3000/issue/reports/download?fromDate='+fromDate+'&toDate='+toDate, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
       });
       
       if (!response.ok) {

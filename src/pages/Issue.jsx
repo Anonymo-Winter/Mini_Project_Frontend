@@ -85,7 +85,7 @@ const Issue = () => {
       [...page.data.issues]
     ))
   }
-  console.log(markers)
+  
 
  
  
@@ -104,7 +104,7 @@ const Issue = () => {
           </p>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {stats.map((stat) => (
               <Card key={stat.label} className="bg-white/80 border-none shadow-sm hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
@@ -120,7 +120,7 @@ const Issue = () => {
                 </CardContent>
               </Card>
             ))}
-          </div>
+          </div> */}
 
           {/* Search and Filter Section */}
           <div className="flex flex-col sm:flex-row gap-4">
