@@ -8,6 +8,7 @@ import { useFetchIssuesByOffice } from "@/api/query";
 import AuthIssueCard from "./AuthIssueCard";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
+import '../App.css';
 
 const RepresentativeIssues = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -67,9 +68,9 @@ const RepresentativeIssues = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[80vh]">
       <div className="max-w-7xl mx-auto ">
-        <Card className="mb-8">
+        <Card className="mb-8 border border-gray-300">
           <CardContent className="pt-6">
             <div className="flex gap-3">
               <div className="relative flex-1">
@@ -100,7 +101,7 @@ const RepresentativeIssues = () => {
               
           </div>
         ) : issues?.pages[0]?.data?.issues?.length > 0 ? (
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-y-scroll max-h-[80vh] scrollbar-hidden">
             {issues.pages.map((page, index) => (
               <React.Fragment key={index}>
                 {page.data.issues.map((issue) => {

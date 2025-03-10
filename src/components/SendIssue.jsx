@@ -14,6 +14,7 @@ import L from 'leaflet';
 import { useSendIssue } from '@/api/query';
 import { useToast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
+import Navbar from './Navbar';
 
 
 
@@ -386,7 +387,9 @@ const IssueForm = () => {
   );
   if(isPending) return <div>Loading...</div>
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-4 md:p-8">
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-4 md:p-8">
       {/* Add a wrapper div with relative positioning */}
       <div className="relative">
         <Card className="max-w-[1200px] w-11/12 mx-auto shadow-lg transition-shadow duration-200 hover:shadow-xl">
@@ -562,6 +565,10 @@ const IssueForm = () => {
         </Card>
       </div>
     </div>
+    <footer className="bg-white border-t border-gray-200 py-4 text-center text-gray-500 text-sm">
+                    <p>© 2025 Municipal Citizen Services Portal</p>
+                </footer>
+    </>
   );
 };
 
