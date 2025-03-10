@@ -10,7 +10,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
 import { ChevronDown, Menu, LogOut, User, FileText, Search, Info, Bell, HelpCircle } from "lucide-react";
+
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useFetchUser } from "@/api/query";
 
@@ -22,7 +24,7 @@ const NavLink = ({ to, children }) => {
     return (
         <Link to={to}>
             <div
-                className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
+  className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
                     isActive 
                     ? "border-blue-700 text-blue-900" 
                     : "border-transparent text-gray-700 hover:border-blue-300 hover:text-blue-800"
@@ -42,10 +44,12 @@ const MobileNavLink = ({ to, children, onClick }) => {
     return (
         <Link to={to} className="block" onClick={onClick}>
             <div
+
                 className={`px-4 py-3 text-base font-medium border-l-4 ${
                     isActive 
                     ? "border-blue-700 bg-blue-50 text-blue-900" 
                     : "border-transparent text-gray-700 hover:bg-gray-50 hover:border-blue-300"
+
                 }`}
             >
                 {children}
@@ -65,6 +69,7 @@ const Navbar = () => {
     const closeMenu = () => setIsMenuOpen(false);
 
     return (
+
         <div className="bg-white">
             
 
@@ -297,6 +302,7 @@ const Navbar = () => {
 
             
         </div>
+
     );
 };
 

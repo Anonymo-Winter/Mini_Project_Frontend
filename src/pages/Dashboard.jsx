@@ -1,7 +1,7 @@
-import React from 'react'
-import UserProfile from './CitizenDashboard'
-import DashboardPage from './AuthorityDashboard'
-import SubordinateDashboardPage from './SubOrdinateDashboard'
+import UserProfile from "./CitizenDashboard";
+import DashboardPage from "./AuthorityDashboard";
+import SubordinateDashboardPage from "./SubOrdinateDashboard";
+
 
 
 function Dashboard() {
@@ -13,13 +13,9 @@ function Dashboard() {
         return <UserProfile/>
     }else if(type === "Representative authority"){
          return <DashboardPage />
+
     }
-    
-    
-    return <SubordinateDashboardPage />
-    
-    
-    
+    return <SubordinateDashboardPage />;
 }
 
-export default Dashboard
+export default Dashboard;

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+
 import { 
     LayoutDashboard, 
     AlertTriangle, 
@@ -29,6 +30,9 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 
+import React, { useState, useEffect } from "react";
+
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -45,14 +49,55 @@ const CitizenDashboard = () => {
     const [activeTab, setActiveTab] = useState("notifications");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+
     const navigate = useNavigate();
     const {data: user, isLoading, isError, removeFromCache} = useFetchUser();
+
 
     const navigationItems = [
         { id: "notifications", label: "Notifications", icon: Bell },
         { id: "myList", label: "My Issues", icon: AlertTriangle },
         { id: "settings", label: "Settings", icon: Settings },
     ];
+
+    // Sync URL hash with active tab
+    useEffect(() => {
+        // Get the hash from URL (remove the # symbol)
+        const hash = window.location.hash.replace("#", "");
+
+        // If hash exists and matches a navigation item, set it as active
+        if (hash && navigationItems.some((item) => item.id === hash)) {
+            setActiveTab(hash);
+        } else if (!hash && window.location.pathname === "/dashboard") {
+            // If no hash but we're on dashboard page, set default
+            setActiveTab("notifications");
+            // Update URL to include default hash
+            window.location.hash = "notifications";
+        }
+
+        // Listen for hash changes
+        const handleHashChange = () => {
+            const newHash = window.location.hash.replace("#", "");
+            if (newHash && navigationItems.some((item) => item.id === newHash)) {
+                setActiveTab(newHash);
+            }
+        };
+
+        window.addEventListener("hashchange", handleHashChange);
+
+        // Cleanup event listener
+        return () => {
+            window.removeEventListener("hashchange", handleHashChange);
+        };
+    }, []);
+
+    // Update URL hash when active tab changes
+    const handleTabChange = (tabId) => {
+        setActiveTab(tabId);
+        setIsSidebarOpen(false);
+        window.location.hash = tabId;
+    };
+
 
     const EditProfileDialog = () => (
         <Dialog open={isEditProfileOpen} onOpenChange={setIsEditProfileOpen}>
@@ -103,12 +148,16 @@ const CitizenDashboard = () => {
                         >
                             Cancel
                         </Button>
+
                         <Button 
+
                             onClick={() => {
                                 // Handle profile update logic here
                                 setIsEditProfileOpen(false);
                             }}
+
                             className="bg-blue-800 hover:bg-blue-900 text-white"
+
                         >
                             Save Changes
                         </Button>
@@ -131,6 +180,7 @@ const CitizenDashboard = () => {
         }
     };
 
+
     if(isLoading) return (
         <div className="min-h-screen flex items-center justify-center bg-slate-50">
             <div className="animate-pulse flex flex-col items-center">
@@ -151,16 +201,17 @@ const CitizenDashboard = () => {
         </div>
     );
 
+
     return (
         <>
         <div className="min-h-screen bg-slate-50">
             {/* Sidebar */}
-            <aside 
+            <aside
                 className={`
                     fixed top-0 left-0 z-40 h-screen w-64 
                     bg-white border-r border-gray-200 shadow-sm
                     transform transition-transform duration-200 ease-in-out
-                    ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+                    ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
                     lg:translate-x-0
                 `}
             >
@@ -194,16 +245,15 @@ const CitizenDashboard = () => {
                             return (
                                 <button
                                     key={item.id}
-                                    onClick={() => {
-                                        setActiveTab(item.id);
-                                        setIsSidebarOpen(false);
-                                    }}
+                                    onClick={() => handleTabChange(item.id)}
                                     className={`
                                         w-full flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium
                                         transition-colors duration-150
+
                                         ${activeTab === item.id 
                                             ? 'bg-blue-50 text-blue-800 border-l-4 border-blue-800' 
                                             : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+
                                         }
                                         my-1
                                     `}
@@ -257,9 +307,11 @@ const CitizenDashboard = () => {
                 {/* Main Content */}
                 <main className="flex-1 overflow-auto">
                     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+
                         <div className="mb-6 bg-white border-l-4 border-blue-800 p-4 shadow-sm">
                             <h2 className="text-xl font-semibold text-gray-800">
                                 {navigationItems.find(item => item.id === activeTab)?.label}
+
                             </h2>
                             <p className="text-gray-500 text-sm mt-1">
                                 {activeTab === "notifications" && "View your system notifications and updates"}
@@ -282,7 +334,7 @@ const CitizenDashboard = () => {
 
             {/* Mobile Overlay */}
             {isSidebarOpen && (
-                <div 
+                <div
                     className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
                     onClick={() => setIsSidebarOpen(false)}
                 />
