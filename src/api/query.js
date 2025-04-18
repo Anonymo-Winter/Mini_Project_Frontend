@@ -317,7 +317,7 @@ export const useFetchUser = () => {
     const query = useQuery({
         queryKey: ["user"],
         queryFn: getUser,
-        //staleTime: 1000 * 60 * 3,
+        staleTime: 1000 * 60 * 3,
     });
 
     const removeFromCache = (id) => {
@@ -380,7 +380,6 @@ export const useUnUpVote = () => {
 };
 
 export const useFetchAnalytics = (fromDate, toDate) => {
-    console.log(fromDate, toDate);
     return useQuery({
         queryKey: ["analytics", fromDate, toDate],
         queryFn: getAnalytics,
